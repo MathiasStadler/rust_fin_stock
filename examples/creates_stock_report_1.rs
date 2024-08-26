@@ -1,25 +1,24 @@
 // running into folder => /home/user/workspace_rust/rust_fin_stock
-// cargo run --example creates_stock_report
+// cargo run --example creates_stock_report_1
 
 use std::error::Error;
 use std::fs;
 
 use chrono::DateTime;
+use chrono::Duration;
 use chrono::NaiveDate;
 use chrono::NaiveDateTime;
 use chrono::TimeZone;
 use chrono::Utc;
-use rand::Rng;
-use chrono::Duration;
-use plotters::prelude::SeriesLabelPosition;
-use plotters::prelude::RGBColor;
-use plotters::prelude::CandleStick;
 use plotters::prelude::BitMapBackend;
+use plotters::prelude::CandleStick;
 use plotters::prelude::ChartBuilder;
 use plotters::prelude::IntoDrawingArea;
-use plotters::prelude::PathElement;
 use plotters::prelude::LineSeries;
-
+use plotters::prelude::PathElement;
+use plotters::prelude::RGBColor;
+use plotters::prelude::SeriesLabelPosition;
+use rand::Rng;
 
 use plotters::prelude::full_palette::ORANGE;
 use plotters::prelude::full_palette::PURPLE;
@@ -32,14 +31,13 @@ use plotters::style::GREEN;
 use plotters::style::RED;
 use plotters::style::WHITE;
 
-use rust_decimal::Decimal;
 use rust_decimal::prelude::FromPrimitive;
 use rust_decimal::prelude::ToPrimitive;
+use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 
 #[allow(unused_imports)]
 // use crate::generate_stock_data_series;
-
 #[derive(Debug)]
 pub struct StockData {
     date: DateTime<Utc>,
@@ -73,7 +71,6 @@ impl StockData {
     }
 }
 
-   
 pub fn generate_stock_data_series(limit: Option<u8>) -> Vec<StockData> {
     let mut stock_data_series: Vec<StockData> = vec![];
     for number in 0..limit.unwrap_or(7) {
@@ -154,9 +151,6 @@ fn generate_stock_data(date_string: &str) -> StockData {
         close,
     )
 }
-
-
-
 
 #[derive(Debug)]
 pub struct StockInformation {
@@ -326,7 +320,7 @@ impl StockInformation {
 
             for (idx, ma_tuple) in moving_averages_2d.iter().enumerate() {
                 let (ma_day, moving_averages) = ma_tuple;
-                let mut ma_line_data: Vec<(NaiveDate, f64)> = Vec::with_capacity(3);
+                let ma_line_data: Vec<(NaiveDate, f64)> = Vec::with_capacity(3);
                 // let mut ma_line_data: Vec<NaiveDate> = Vec::with_capacity(3);
                 let ma_len = moving_averages.len();
 
@@ -380,8 +374,6 @@ impl StockInformation {
     }
 }
 
-
-
 fn it_creates_a_new_stock_information_with_data_series_and_show_chart_with_moving_average() {
     let stock_data_series = generate_stock_data_series(Some(14));
     let stock_information = StockInformation::new(
@@ -401,8 +393,7 @@ fn it_creates_a_new_stock_information_with_data_series_and_show_chart_with_movin
     }
 }
 
-fn main(){
-
+fn main() {
     println!("main running");
     it_creates_a_new_stock_information_with_data_series_and_show_chart_with_moving_average();
 }
