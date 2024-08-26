@@ -1,0 +1,8 @@
+[package]
+name = "rust_fin_stock"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cargo-edit = "0.12.3"
+rustfmt = "0.10.0"
