@@ -1,3 +1,6 @@
+// hier weiter 
+// generate_stock_data_series_ohlcv
+
 // running into folder => /home/user/workspace_rust/rust_fin_stock
 // cargo run --example creates_stock_report_1
 
@@ -36,8 +39,6 @@ use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 
-#[allow(unused_imports)]
-// use crate::generate_stock_data_series;
 #[derive(Debug)]
 pub struct StockData {
     date: DateTime<Utc>,
@@ -69,22 +70,6 @@ impl StockData {
             net_change_percent: None,
         }
     }
-}
-
-pub fn generate_stock_data_series(limit: Option<u8>) -> Vec<StockData> {
-    let mut stock_data_series: Vec<StockData> = vec![];
-    for number in 0..limit.unwrap_or(7) {
-        let number_plus = number + 1;
-
-        let stock_date = match number_plus {
-            number_plus if number_plus >= 10 => format!("10-{number_plus}-2022 00:00"),
-            _ => format!("10-0{number_plus}-2022 00:00"),
-        };
-
-        let stock_data = generate_stock_data(&stock_date);
-        stock_data_series.push(stock_data);
-    }
-    stock_data_series
 }
 
 fn generate_utc_date_from_date_string(date_string: &str) -> DateTime<Utc> {
@@ -152,6 +137,105 @@ fn generate_stock_data(date_string: &str) -> StockData {
     )
 }
 
+pub fn generate_stock_data_series(limit: Option<u8>) -> Vec<StockData> {
+    let mut stock_data_series: Vec<StockData> = vec![];
+    for number in 0..limit.unwrap_or(7) {
+        let number_plus = number + 1;
+
+        let stock_date = match number_plus {
+            number_plus if number_plus >= 10 => format!("10-{number_plus}-2022 00:00"),
+            _ => format!("10-0{number_plus}-2022 00:00"),
+        };
+
+        let stock_data = generate_stock_data(&stock_date);
+        stock_data_series.push(stock_data);
+    }
+    stock_data_series
+}
+
+fn generate_stock_data_ohlcv(date_string: &str) -> StockData {
+    let base_stock_data_series = vec![
+        (2024 - 07 - 12, 78.92, 82.11, 78.685, 81.55, 1629750),
+        (2024 - 07 - 15, 82.1, 82.79, 81.24, 81.32, 1443184),
+        (2024 - 07 - 16, 82.32, 85.92, 82.04, 85.82, 1076876),
+        (2024 - 07 - 17, 84.37, 85.38, 83.31, 83.34, 753719),
+        (2024 - 07 - 18, 83.64, 86.345, 82.33, 82.81, 900662),
+        (2024 - 07 - 19, 82.7, 82.7, 80.86, 81.15, 771416),
+        (2024 - 07 - 22, 82.11, 82.15, 79.78, 81.72, 903883),
+        (2024 - 07 - 23, 80.15, 80.62, 79.365, 79.55, 1082063),
+        (2024 - 07 - 24, 78.88, 79.852, 76.42, 76.5, 1129719),
+        (2024 - 07 - 25, 77.07, 80.12, 76.875, 78.48, 781867),
+        (2024 - 07 - 26, 80.71, 83.73, 80.405, 82.5, 1012631),
+        (2024 - 07 - 29, 82.83, 84.25, 82.395, 83.59, 904321),
+        (2024 - 07 - 30, 83.88, 84.82, 83.08, 84.5, 859673),
+        (2024 - 07 - 31, 85.0, 86.56, 83.41, 83.63, 899712),
+        (2024 - 08 - 01, 84.17, 85.14, 79.85, 80.43, 1071646),
+        (2024 - 08 - 02, 78.12, 78.12, 75.3, 77.26, 925535),
+        (2024 - 08 - 05, 72.63, 76.65, 72.2, 75.45, 1054175),
+        (2024 - 08 - 06, 74.96, 78.18, 74.28, 76.56, 1684381),
+        (2024 - 08 - 07, 61.04, 62.7, 58.68, 60.07, 6830593),
+        (2024 - 08 - 08, 61.01, 62.49, 59.46, 60.7, 2552222),
+        (2024 - 08 - 09, 60.55, 61.86, 60.0, 60.7, 1836974),
+        (2024 - 08 - 12, 60.42, 61.19, 58.91, 59.17, 1663846),
+        (2024 - 08 - 13, 59.49, 61.68, 59.43, 61.42, 1494238),
+        (2024 - 08 - 14, 61.94, 62.62, 60.365, 60.46, 1017821),
+        (2024 - 08 - 15, 61.73, 64.3, 61.28, 63.75, 1678198),
+        (2024 - 08 - 16, 63.33, 64.495, 63.09, 63.4, 1518835),
+        (2024 - 08 - 19, 64.03, 64.9, 63.45, 64.0, 927182),
+        (2024 - 08 - 20, 64.17, 65.27, 63.29, 64.11, 839691),
+        (2024 - 08 - 21, 64.34, 65.57, 64.21, 65.43, 771763),
+        (2024 - 08 - 22, 65.47, 65.97, 63.93, 64.08, 723877),
+        (2024 - 08 - 23, 64.7, 67.0, 64.425, 66.865, 64208),
+    ];
+
+    let base_data_series_len = base_stock_data_series.len();
+
+    let mut rng = rand::thread_rng();
+
+    let fmt = "%Y-%m-%d";
+    let tmp_date_string = base_stock_data_series[rng.gen_range(0..base_data_series_len)].1;
+    println!("date_string => {}", tmp_date_string);
+    // let date = DateTime::parse_from_str(base_stock_data_series[rng.gen_range(0..base_data_series_len)].1, fmt)
+    // .unwrap();
+
+    // let date =  (0..base_data_series_len)].0);
+    let high = Decimal::from_f64(base_stock_data_series[rng.gen_range(0..base_data_series_len)].2)
+        .unwrap()
+        .round_dp(2);
+    let low = Decimal::from_f64(base_stock_data_series[rng.gen_range(0..base_data_series_len)].3)
+        .unwrap()
+        .round_dp(2);
+    let open = Decimal::from_f64(base_stock_data_series[rng.gen_range(0..base_data_series_len)].1)
+        .unwrap()
+        .round_dp(2);
+    let close = Decimal::from_f64(base_stock_data_series[rng.gen_range(0..base_data_series_len)].4)
+        .unwrap()
+        .round_dp(2);
+
+    StockData::new(
+        generate_utc_date_from_date_string(date_string),
+        high,
+        low,
+        open,
+        close,
+    )
+}
+
+pub fn generate_stock_data_series_ohlcv(limit: Option<u8>) -> Vec<StockData> {
+    let mut stock_data_series: Vec<StockData> = vec![];
+    for number in 0..limit.unwrap_or(7) {
+        let number_plus = number + 1;
+
+        let stock_date = match number_plus {
+            number_plus if number_plus >= 10 => format!("10-{number_plus}-2022 00:00"),
+            _ => format!("10-0{number_plus}-2022 00:00"),
+        };
+
+        let stock_data = generate_stock_data(&stock_date);
+        stock_data_series.push(stock_data);
+    }
+    stock_data_series
+}
 #[derive(Debug)]
 pub struct StockInformation {
     company_name: String,
@@ -375,7 +459,7 @@ impl StockInformation {
 }
 
 fn it_creates_a_new_stock_information_with_data_series_and_show_chart_with_moving_average() {
-    let stock_data_series = generate_stock_data_series(Some(14));
+    let stock_data_series = generate_stock_data_series_ohlcv(Some(14));
     let stock_information = StockInformation::new(
         "BenCorpo".to_string(),
         "BNCRP".to_string(),
