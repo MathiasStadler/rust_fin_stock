@@ -6,3 +6,7 @@ edition = "2021"
 [dependencies]
 cargo-edit = "0.12.3"
 rustfmt = "0.10.0"
+
+[[example]]
+name = "struct_default"
+path = "examples/struct_default.rs"
