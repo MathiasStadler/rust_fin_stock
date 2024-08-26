@@ -1,9 +1,15 @@
-mod creates_a_new_stock_information_with_data_series_and_show_chart_with_moving_average;
 
-use std::{error::Error, fs};
-use chrono::{DateTime, NaiveDate ,NaiveDateTime, TimeZone, Utc};
+
+use std::error::Error;
+use std::fs;
+
+use chrono::DateTime;
+use chrono::NaiveDate;
+use chrono::NaiveDateTime;
+use chrono::TimeZone;
+use chrono::Utc;
 use rand::Rng;
-use chrono::{prelude::*, Duration};
+use chrono::Duration;
 use plotters::prelude::SeriesLabelPosition;
 use plotters::prelude::RGBColor;
 use plotters::prelude::CandleStick;
@@ -19,7 +25,7 @@ use plotters::prelude::full_palette::PURPLE;
 
 use plotters::style::Color;
 use plotters::style::IntoFont;
-use plotters::style::RGBColor;
+#[allow(unused_imports)]
 use plotters::style::BLUE;
 use plotters::style::GREEN;
 use plotters::style::RED;
@@ -28,11 +34,10 @@ use plotters::style::WHITE;
 use rust_decimal::Decimal;
 use rust_decimal::prelude::FromPrimitive;
 use rust_decimal::prelude::ToPrimitive;
-
-
-
-
 use rust_decimal_macros::dec;
+
+#[allow(unused_imports)]
+// use crate::generate_stock_data_series;
 
 #[derive(Debug)]
 pub struct StockData {
@@ -41,7 +46,9 @@ pub struct StockData {
     low: Decimal,
     open: Decimal,
     close: Decimal,
+    #[allow(dead_code)]
     net_change: Option<Decimal>,
+    #[allow(dead_code)]
     net_change_percent: Option<Decimal>,
 }
 
@@ -153,6 +160,7 @@ fn generate_stock_data(date_string: &str) -> StockData {
 #[derive(Debug)]
 pub struct StockInformation {
     company_name: String,
+    #[allow(dead_code)]
     symbol: String,
     stock_data_series: Vec<StockData>,
 }
@@ -164,6 +172,57 @@ impl StockInformation {
             symbol,
             stock_data_series,
         }
+    }
+
+    pub fn get_moving_averages(&self, ma_days: u16) -> Option<Vec<Decimal>> {
+        if self.stock_data_series.len() == 0 {
+            return None;
+        }
+
+        let mut moving_averages: Vec<Decimal> = vec![];
+        let closing_prices = self
+            .stock_data_series
+            .iter()
+            .map(|stock_data| stock_data.close)
+            .collect::<Vec<Decimal>>();
+
+        // No moving averages to be computed since current closing price series is not sufficient to build based upon ma_days parameters.
+        if closing_prices.len() < ma_days.into() {
+            return None;
+        }
+
+        let ma_days_idx_end = ma_days - 1;
+
+        let ma_days_decimal = Decimal::from_u16(ma_days).unwrap();
+        let mut sum = dec!(0.0);
+        for x in 0..=ma_days_idx_end {
+            let closing_price = &closing_prices[x.to_usize().unwrap()];
+            sum = sum + closing_price;
+        }
+
+        let first_moving_average_day = sum / ma_days_decimal;
+        moving_averages.push(first_moving_average_day.round_dp(2));
+
+        if closing_prices.len() == ma_days.into() {
+            return Some(moving_averages);
+        }
+
+        let mut idx: usize = 0;
+        let mut tail_closing_day_idx: usize = (ma_days_idx_end + 1).to_usize().unwrap();
+
+        while tail_closing_day_idx != closing_prices.len() {
+            let previous_moving_average = &moving_averages[idx];
+            let head_closing_day_price = &closing_prices[idx] / ma_days_decimal;
+            let tail_closing_day_price = &closing_prices[tail_closing_day_idx] / ma_days_decimal;
+            let current_moving_average =
+                previous_moving_average - head_closing_day_price + tail_closing_day_price;
+            moving_averages.push(current_moving_average.round_dp(2));
+
+            idx += 1;
+            tail_closing_day_idx += 1;
+        }
+
+        return Some(moving_averages);
     }
 
     pub fn show_chart(

@@ -9,6 +9,8 @@ chrono = "0.4.38"
 decimal = "2.1.0"
 plotters = "0.3.6"
 rand = "0.8.5"
+rust_decimal = "1.36.0"
+rust_decimal_macros = "1.36.0"
 rustfmt = "0.10.0"
 
 [[example]]
