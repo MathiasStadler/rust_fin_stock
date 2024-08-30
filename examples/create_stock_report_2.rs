@@ -484,4 +484,4 @@ fn main() {
 
 
 // cargo run --example
-// cargo run --example creates_stock_report_1
+// cargo run --example create_stock_report_2
