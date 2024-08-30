@@ -5,21 +5,22 @@
 
 // sample for explain read from file system
 
+use chrono::{DateTime, NaiveDateTime, TimeZone, Utc};
 use rust_decimal::prelude::FromPrimitive;
 // use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
 // use rust_decimal_macros::dec;
 
-use chrono::DateTime;
-use chrono::NaiveDateTime;
-use chrono::Utc;
+//use chrono::DateTime;
+//use chrono::NaiveDateTime;
+//use chrono::Utc;
 
 // Date,Open,High,Low,Close,Volume
 use serde::Deserialize;
 #[derive(Deserialize)]
 struct Record {
     #[serde(rename = "Date")]
-    date: f64,
+    date: String,
     #[serde(rename = "Open")]
     open: f64,
     #[serde(rename = "High")]
@@ -70,12 +71,17 @@ fn generate_utc_date_from_date_string(date_string: &str) -> DateTime<Utc> {
     Utc.from_utc_datetime(&day_one)
 }
 
-fn read_csv_to_vector(file_name: &str) -> StockData {
+fn read_csv_to_vector(file_name: &str) -> Vec<StockData> {
+
+
+    let mut  return_vec: Vec<StockData>;
     // let mut reader = csv::Reader::from_reader(csv.as_bytes());
     let mut reader = csv::Reader::from_path(file_name).unwrap();
 
     for record in reader.deserialize() {
-        let record: Record = record?;
+        
+        
+        
         println!(
             "{},{},{},{},{},{}",
             record.date, record.open, record.high, record.low, record.close, record.volume,
@@ -86,34 +92,27 @@ fn read_csv_to_vector(file_name: &str) -> StockData {
 
         // let mut rng = rand::thread_rng();
 
-        let high =
-            Decimal::from_f64(record.high)
-                .unwrap()
-                .round_dp(2);
-        let low =
-            Decimal::from_f64(record.low)
-                .unwrap()
-                .round_dp(2);
-        let open =
-            Decimal::from_f64(record.open)
-                .unwrap()
-                .round_dp(2);
-        let close =
-            Decimal::from_f64(record.close)
-                .unwrap()
-                .round_dp(2);
+        let high = Decimal::from_f64(record.high).unwrap().round_dp(2);
+        let low = Decimal::from_f64(record.low).unwrap().round_dp(2);
+        let open = Decimal::from_f64(record.open).unwrap().round_dp(2);
+        let close = Decimal::from_f64(record.close).unwrap().round_dp(2);
         //
+
+        println!("{},{},{},{},{}", record.date, open, high, low, close);
+
+        let line_stock_data =StockData::new(
+            generate_utc_date_from_date_string(&record.date),
+            high,
+            low,
+            open,
+            close,
+        );
+
+        return_vec.push(line_stock_data);
+        
     }
 
-    StockData::new(
-        generate_utc_date_from_date_string(date),
-        high,
-        low,
-        open,
-        close,
-    );
-
-    let return_vec: StockData;
+    // let return_vec: StockData;
 
     return_vec
 }
