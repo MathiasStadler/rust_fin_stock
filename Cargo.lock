@@ -1652,6 +1652,7 @@ dependencies = [
  "rust_decimal_macros",
  "rustfmt",
  "serde",
+ "serde_json",
 ]
 
 [[package]]
