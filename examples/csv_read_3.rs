@@ -3,7 +3,7 @@
 
 // sample for explain read from file system
 
-use chrono::{DateTime, NaiveDateTime, NaiveDate,TimeZone, Utc};
+use chrono::{DateTime, NaiveDateTime, TimeZone, Utc};
 // use rust_decimal::prelude::FromPrimitive;
 // use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
@@ -29,10 +29,15 @@ struct Record {
 
 #[derive(Debug)]
 pub struct StockData {
+    #[allow(dead_code)]
     date: DateTime<Utc>,
+    #[allow(dead_code)]
     high: Decimal,
+    #[allow(dead_code)]
     low: Decimal,
+    #[allow(dead_code)]
     open: Decimal,
+    #[allow(dead_code)]
     close: Decimal,
     #[allow(dead_code)]
     net_change: Option<Decimal>,
@@ -61,7 +66,8 @@ impl StockData {
 }
 
 fn generate_utc_date_from_date_string(date_string: &str) -> DateTime<Utc> {
-    let day_one = NaiveDateTime::parse_from_str(date_string, "%m-%d-%Y %H:%M").unwrap();
+    // let day_one = NaiveDateTime::parse_from_str(date_string, "%m-%d-%Y %H:%M").unwrap();
+    let day_one = NaiveDateTime::parse_from_str(date_string, "%Y-%m-%d").unwrap();
     Utc.from_utc_datetime(&day_one)
 }
 
@@ -76,7 +82,7 @@ fn read_csv() -> Result<Vec<StockData>, csv::Error> {
     let mut reader = csv::Reader::from_path("stock_data/stock_trex_data.csv").unwrap();
 
     // https://www.geeksforgeeks.org/rust-vectors/
-    let stock_data:Vec<StockData> = Vec::new(); 
+    let mut stock_data:Vec<StockData> = Vec::new(); 
     let mut stk_line;
     // let fmt = "%Y-%m-%d";
 
