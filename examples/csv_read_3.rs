@@ -3,8 +3,7 @@
 
 // sample for explain read from file system
 
-
-use chrono::{DateTime, NaiveDateTime, TimeZone, Utc};
+use chrono::{DateTime, NaiveDateTime, NaiveDate,TimeZone, Utc};
 // use rust_decimal::prelude::FromPrimitive;
 // use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
@@ -27,7 +26,6 @@ struct Record {
     #[serde(rename = "Volume")]
     volume: f32,
 }
-
 
 #[derive(Debug)]
 pub struct StockData {
@@ -77,20 +75,34 @@ fn read_csv() -> Result<StockData, csv::Error> {
     // let mut reader = csv::Reader::from_reader(csv.as_bytes());
     let mut reader = csv::Reader::from_path("stock_data/stock_trex_data.csv").unwrap();
 
+    let stockdata;
+    let fmt = "%Y-%m-%d";
+
     for record in reader.deserialize() {
         let record: Record = record?;
         println!(
             "{},{},{},{},{},{}",
             record.date, record.open, record.high, record.low, record.close, record.volume,
         );
-    let stockdata = StockData::new(record.date, record.high, record.low, record.open,record.close)
-    
+
+        //let date2= DateTime::parse_from_str(&record.date ,fmt)
+        //.unwrap();
+
+    // let date = DateTime::parse_from_str(&record.date, "%Y-%m-%d").unwrap();
+    // https://docs.rs/dateparser/latest/dateparser/
+    let date = generate_utc_date_from_date_string(&record.date);
+
+    //ohlcv
+        let open = Decimal::from_f32_retain(record.open);
+        let high = Decimal::from_f32_retain(record.high);
+        let low = Decimal::from_f32_retain(record.low);
+        let close = Decimal::from_f32_retain(record.close);
+
+        stockdata = StockData::new(date,open,high,low.close);
+
     }
 
-
-
-
-    Ok()
+    Ok(stockdata)
 }
 
 //cargo run --example csv_read_1
