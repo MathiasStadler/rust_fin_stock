@@ -71,11 +71,13 @@ fn main() {
     let _ = read_csv();
 }
 
-fn read_csv() -> Result<StockData, csv::Error> {
+fn read_csv() -> Result<Vec<StockData>, csv::Error> {
     // let mut reader = csv::Reader::from_reader(csv.as_bytes());
     let mut reader = csv::Reader::from_path("stock_data/stock_trex_data.csv").unwrap();
 
-    let mut stockdata;
+    // https://www.geeksforgeeks.org/rust-vectors/
+    let stock_data:Vec<StockData> = Vec::new(); 
+    let mut stk_line;
     // let fmt = "%Y-%m-%d";
 
     for record in reader.deserialize() {
@@ -102,11 +104,12 @@ fn read_csv() -> Result<StockData, csv::Error> {
         let close = Decimal::from_f32_retain(record.close).unwrap()
         .round_dp(2);
 
-        stockdata = StockData::new(date,high,low,open,close);
+        stk_line = StockData::new(date,high,low,open,close);
 
+        stock_data.push(stk_line);
     }
 
-    Ok(stockdata)
+    Ok(stock_data)
 }
 
 //cargo run --example csv_read_1
