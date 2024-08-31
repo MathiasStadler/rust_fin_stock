@@ -68,22 +68,21 @@ impl StockData {
 fn generate_utc_date_from_date_string(date_string: &str) -> DateTime<Utc> {
 
     println!("date-string => {}",  date_string);
-    // let day_one = NaiveDateTime::parse_from_str(date_string, "%m-%d-%Y %H:%M").unwrap();
-    // let day_one = NaiveDateTime::parse_from_str(date_string, "%Y-%m-%d").expect("REASON").and_utc();
-    
-    //let day_one = NaiveDateTime::parse_from_str("2015-09-05", "%Y-%m-%d").unwrap();
+   
 
     let date_time_string = format!("{} 00:00:00",date_string);
     let day_one = NaiveDateTime::parse_from_str(&date_time_string, "%Y-%m-%d %H:%M:%S").unwrap();
-    //println!("day-one => {}",day_one);
+    
     Utc.from_utc_datetime(&day_one)
         
 }
 
 fn main() {
-    println!("Hello world");
+    println!("Start");
 
-    let _ = read_csv();
+    let stock_data= read_csv();
+
+    println!("Len => {}",stock_data.unwrap().len());
 }
 
 fn read_csv() -> Result<Vec<StockData>, csv::Error> {
@@ -97,10 +96,10 @@ fn read_csv() -> Result<Vec<StockData>, csv::Error> {
 
     for record in reader.deserialize() {
         let record: Record = record?;
-        println!(
-            "{},{},{},{},{},{}",
-            record.date, record.open, record.high, record.low, record.close, record.volume,
-        );
+        // println!(
+        //     "{},{},{},{},{},{}",
+        //     record.date, record.open, record.high, record.low, record.close, record.volume,
+        // );
 
         //let date2= DateTime::parse_from_str(&record.date ,fmt)
         //.unwrap();
