@@ -75,8 +75,8 @@ fn read_csv() -> Result<StockData, csv::Error> {
     // let mut reader = csv::Reader::from_reader(csv.as_bytes());
     let mut reader = csv::Reader::from_path("stock_data/stock_trex_data.csv").unwrap();
 
-    let stockdata;
-    let fmt = "%Y-%m-%d";
+    let mut stockdata;
+    // let fmt = "%Y-%m-%d";
 
     for record in reader.deserialize() {
         let record: Record = record?;
@@ -93,12 +93,16 @@ fn read_csv() -> Result<StockData, csv::Error> {
     let date = generate_utc_date_from_date_string(&record.date);
 
     //ohlcv
-        let open = Decimal::from_f32_retain(record.open);
-        let high = Decimal::from_f32_retain(record.high);
-        let low = Decimal::from_f32_retain(record.low);
-        let close = Decimal::from_f32_retain(record.close);
+        let open = Decimal::from_f32_retain(record.open).unwrap()
+        .round_dp(2);
+        let high = Decimal::from_f32_retain(record.high).unwrap()
+        .round_dp(2);
+        let low = Decimal::from_f32_retain(record.low).unwrap()
+        .round_dp(2);
+        let close = Decimal::from_f32_retain(record.close).unwrap()
+        .round_dp(2);
 
-        stockdata = StockData::new(date,open,high,low.close);
+        stockdata = StockData::new(date,high,low,open,close);
 
     }
 
