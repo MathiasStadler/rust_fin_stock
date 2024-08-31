@@ -72,7 +72,9 @@ fn generate_utc_date_from_date_string(date_string: &str) -> DateTime<Utc> {
     // let day_one = NaiveDateTime::parse_from_str(date_string, "%Y-%m-%d").expect("REASON").and_utc();
     
     //let day_one = NaiveDateTime::parse_from_str("2015-09-05", "%Y-%m-%d").unwrap();
-    let day_one = NaiveDateTime::parse_from_str("2015-09-05 23:56:04", "%Y-%m-%d %H:%M:%S").unwrap();
+
+    let date_time_string = format!("{} 00:00:00",date_string);
+    let day_one = NaiveDateTime::parse_from_str(&date_time_string, "%Y-%m-%d %H:%M:%S").unwrap();
     //println!("day-one => {}",day_one);
     Utc.from_utc_datetime(&day_one)
         
@@ -117,6 +119,8 @@ fn read_csv() -> Result<Vec<StockData>, csv::Error> {
         let close = Decimal::from_f32_retain(record.close).unwrap()
         .round_dp(2);
 
+
+        println!("stk_line => {},{},{},{},{}",date,high,low,open,close);
         stk_line = StockData::new(date,high,low,open,close);
 
         stock_data.push(stk_line);
