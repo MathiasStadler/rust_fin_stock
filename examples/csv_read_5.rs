@@ -4,7 +4,6 @@
 // sample for explain read from file system
 
 use csv::Error;
-
 use chrono::{DateTime, NaiveDate,NaiveDateTime, TimeZone, Utc};
 // use rust_decimal::prelude::FromPrimitive;
 // use rust_decimal::prelude::ToPrimitive;
@@ -84,13 +83,13 @@ fn main() {
 
     let stock_data= read_csv();
 
-    println!("Len => {}",stock_data.unwrap().len());
+    // println!("Len => {}",stock_data.unwrap().len());
 
     vec_loop_3(stock_data);
 
 }
 
-fn vec_loop_3(v: Result<Vec<StockData>,Error>) {
+fn vec_loop_3(mut v: Result<Vec<StockData>,Error>) {
     for i in v.iter_mut() {
         println!("{:?}",i);
     }
