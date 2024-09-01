@@ -4,7 +4,7 @@
 // sample for explain read from file system
 
 use csv::Error;
-use chrono::{DateTime, NaiveDate,NaiveDateTime, TimeZone, Utc};
+use chrono::{DateTime,/*NaiveDate,*/NaiveDateTime, TimeZone, Utc};
 // use rust_decimal::prelude::FromPrimitive;
 // use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
@@ -69,9 +69,9 @@ impl StockData {
 
 fn generate_utc_date_from_date_string(date_string: &str) -> DateTime<Utc> {
 
-    println!("date-string => {}",  date_string);
+    // poor debug
+   //  println!("date-string => {}",  date_string);
    
-
     let date_time_string = format!("{} 00:00:00",date_string);
     let day_one = NaiveDateTime::parse_from_str(&date_time_string, "%Y-%m-%d %H:%M:%S").unwrap();
     
@@ -93,6 +93,7 @@ fn main() {
 fn vec_loop_3(mut v: Result<Vec<StockData>,Error>) {
     for i in v.iter_mut() {
         println!("{:?}",i);
+        println!("<>");
     }
 }
 
@@ -129,8 +130,7 @@ fn read_csv() -> Result<Vec<StockData>, csv::Error> {
         let close = Decimal::from_f32_retain(record.close).unwrap()
         .round_dp(2);
 
-
-        println!("stk_line => {},{},{},{},{}",date,high,low,open,close);
+        // println!("stk_line => {},{},{},{},{}",date,high,low,open,close);
         stk_line = StockData::new(date,high,low,open,close);
 
         stock_data.push(stk_line);
