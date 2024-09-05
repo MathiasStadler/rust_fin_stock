@@ -70,6 +70,18 @@ pub struct StockData {
     net_change_percent: Option<Decimal>,
 }
 
+// FROM HERE
+// https://stackoverflow.com/questions/72071616/how-to-get-fmtdisplay-from-a-struct-to-display-it-in-the-fmtdisplay-of-anoth
+
+impl fmt::Display for JobSequence {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for i in &self.job_sequence {
+            writeln!(f, "{}", i)?;
+        }
+        Ok(())
+    }
+}
+
 impl StockData {
     pub fn new(
         date: DateTime<Utc>,
@@ -233,8 +245,14 @@ pub fn generate_stock_data_series(limit: Option<u8>) -> Vec<StockData> {
         };
 
         let stock_data = generate_stock_data(&stock_date);
-        stock_data_series.push(stock_data);
+       // stock_data_series.push(stock_data);
+       for stock in stock_data.iter() {
+
+        println!("{:?}",stock);
+       }
     }
+
+    
     stock_data_series
 }
 
