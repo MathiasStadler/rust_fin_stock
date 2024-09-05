@@ -37,24 +37,24 @@ use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
 
-use serde::Deserialize;
+// use serde::Deserialize;
 
-#[derive(Deserialize)]
-struct Record {
-    #[serde(rename = "Date")]
-    date: String,
-    #[serde(rename = "Open")]
-    open: f32,
-    #[serde(rename = "High")]
-    high: f32,
-    #[serde(rename = "Low")]
-    low: f32,
-    #[serde(rename = "Close")]
-    close: f32,
-    #[serde(rename = "Volume")]
-    #[allow(dead_code)]
-    volume: f32,
-}
+// #[derive(Deserialize)]
+// struct Record {
+//     #[serde(rename = "Date")]
+//     date: String,
+//     #[serde(rename = "Open")]
+//     open: f32,
+//     #[serde(rename = "High")]
+//     high: f32,
+//     #[serde(rename = "Low")]
+//     low: f32,
+//     #[serde(rename = "Close")]
+//     close: f32,
+//     #[serde(rename = "Volume")]
+//     #[allow(dead_code)]
+//     volume: f32,
+// }
 
 #[derive(Debug)]
 pub struct StockData {
@@ -110,7 +110,8 @@ impl StockData {
 //     Utc.from_utc_datetime(&day_one)
 // }
 
-// fn generate_stock_data(date_string: &str) -> Result<Vec<StockData>, csv::Error> {
+
+fn generate_stock_data(date_string: &str) -> Result<Vec<StockData>, csv::Error> {
 //     // fn read_csv() -> Result<Vec<StockData>, csv::Error> {
 //     // let mut reader = csv::Reader::from_reader(csv.as_bytes());
 //     let mut reader = csv::Reader::from_path("stock_data/stock_trex_data.csv").unwrap();
@@ -147,9 +148,9 @@ impl StockData {
 //     }
 
 //     Ok(stock_data)
-// }
+}
 
-pub fn generate_stock_data_series(limit: Option<u8>) -> Vec<StockData> {
+pub fn generate_stock_data_series(_limit: Option<u8>) -> Vec<StockData> {
     let stock_data_series: Vec<StockData> = vec![];
     // for number in 0..limit.unwrap_or(7) {
     //     let number_plus = number + 1;
