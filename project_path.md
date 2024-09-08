@@ -121,3 +121,17 @@ curl --output stock_data/stock_trex_data.csv https://stooq.com/q/d/l/?s=TREX.US&
 cargo watch
 
 ```
+
+## [removed unused dependencies](https://stackoverflow.com/questions/72082550/how-do-i-remove-unused-dependencies-in-cargo-toml)
+
+- [crates cargo-shear](https://crates.io/search?q=cargo-shear)
+
+```bash
+# install
+cargo install cargo-shear
+# Check if there are any unused dependencies
+cargo shear
+# To fix (remove) an unused dependency:
+cargo shear --fix
+
+```
