@@ -135,3 +135,9 @@ cargo shear
 cargo shear --fix
 
 ```
+
+## Updating a local repository with changes from a GitHub repository
+
+```bash
+git pull origin master
+```
