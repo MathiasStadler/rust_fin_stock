@@ -408,9 +408,9 @@ impl StockInformation {
     }
 }
 
-fn it_creates_a_new_stock_information_with_data_series_and_show_chart_with_moving_average() {
+fn it_creates_a_new_stock_information_with_data_series_and_show_chart_with_moving_average(stock_data:&str) {
     // let stock_data_series = generate_stock_data_series(Some(14));
-    let stock_data_series = generate_stock_data_series("blubb");
+    let stock_data_series = generate_stock_data_series(stock_data);
     let stock_information = StockInformation::new(
         "BenCorpo".to_string(),
         "BNCRP".to_string(),
@@ -428,7 +428,9 @@ fn it_creates_a_new_stock_information_with_data_series_and_show_chart_with_movin
 
 fn main() {
     println!("main running");
-    it_creates_a_new_stock_information_with_data_series_and_show_chart_with_moving_average();
+
+    let stock_data = "stock_data/stock_trex_data.csv";
+    it_creates_a_new_stock_information_with_data_series_and_show_chart_with_moving_average(&stock_data);
 }
 
 // cargo run --example
