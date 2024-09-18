@@ -1,7 +1,6 @@
 // running into folder => /home/user/workspace_rust/rust_fin_stock
 // cargo run --example create_stock_report_5
 
-
 // use core::fmt;
 use std::error::Error;
 use std::fs;
@@ -87,7 +86,7 @@ impl StockData {
         high: Decimal,
         low: Decimal,
         open: Decimal,
-        close: Decimal,
+        close: Decimal
     ) -> Self {
         Self {
             date,
@@ -111,44 +110,43 @@ impl StockData {
 //     Utc.from_utc_datetime(&day_one)
 // }
 
-
 fn generate_stock_data(date_string: &str) -> Result<Vec<StockData>, csv::Error> {
-//     // fn read_csv() -> Result<Vec<StockData>, csv::Error> {
-//     // let mut reader = csv::Reader::from_reader(csv.as_bytes());
-//     let mut reader = csv::Reader::from_path("stock_data/stock_trex_data.csv").unwrap();
+    //     // fn read_csv() -> Result<Vec<StockData>, csv::Error> {
+    //     // let mut reader = csv::Reader::from_reader(csv.as_bytes());
+    //     let mut reader = csv::Reader::from_path("stock_data/stock_trex_data.csv").unwrap();
 
-//     // https://www.geeksforgeeks.org/rust-vectors/
-//     let mut stock_data: Vec<StockData> = Vec::new();
-//     let mut stk_line;
-//     // let fmt = "%Y-%m-%d";
+    //     // https://www.geeksforgeeks.org/rust-vectors/
+    let mut stock_data: Vec<StockData> = Vec::new();
+    //     let mut stk_line;
+    //     // let fmt = "%Y-%m-%d";
 
-//     for record in reader.deserialize() {
-//         let record: Record = record?;
-//         // println!(
-//         //     "{},{},{},{},{},{}",
-//         //     record.date, record.open, record.high, record.low, record.close, record.volume,
-//         // );
+    //     for record in reader.deserialize() {
+    //         let record: Record = record?;
+    //         // println!(
+    //         //     "{},{},{},{},{},{}",
+    //         //     record.date, record.open, record.high, record.low, record.close, record.volume,
+    //         // );
 
-//         //let date2= DateTime::parse_from_str(&record.date ,fmt)
-//         //.unwrap();
+    //         //let date2= DateTime::parse_from_str(&record.date ,fmt)
+    //         //.unwrap();
 
-//         // let date = DateTime::parse_from_str(&record.date, "%Y-%m-%d").unwrap();
-//         // https://docs.rs/dateparser/latest/dateparser/
-//         let date = generate_utc_date_from_date_string(&record.date);
+    //         // let date = DateTime::parse_from_str(&record.date, "%Y-%m-%d").unwrap();
+    //         // https://docs.rs/dateparser/latest/dateparser/
+    //         let date = generate_utc_date_from_date_string(&record.date);
 
-//         //ohlcv
-//         let open = Decimal::from_f32_retain(record.open).unwrap().round_dp(2);
-//         let high = Decimal::from_f32_retain(record.high).unwrap().round_dp(2);
-//         let low = Decimal::from_f32_retain(record.low).unwrap().round_dp(2);
-//         let close = Decimal::from_f32_retain(record.close).unwrap().round_dp(2);
+    //         //ohlcv
+    //         let open = Decimal::from_f32_retain(record.open).unwrap().round_dp(2);
+    //         let high = Decimal::from_f32_retain(record.high).unwrap().round_dp(2);
+    //         let low = Decimal::from_f32_retain(record.low).unwrap().round_dp(2);
+    //         let close = Decimal::from_f32_retain(record.close).unwrap().round_dp(2);
 
-//         // println!("stk_line => {},{},{},{},{}",date,high,low,open,close);
-//         stk_line = StockData::new(date, high, low, open, close);
+    //         // println!("stk_line => {},{},{},{},{}",date,high,low,open,close);
+    //         stk_line = StockData::new(date, high, low, open, close);
 
-//         stock_data.push(stk_line);
-//     }
+    //         stock_data.push(stk_line);
+    //     }
 
-//     Ok(stock_data)
+    Ok(stock_data)
 }
 
 pub fn generate_stock_data_series(_limit: Option<u8>) -> Vec<StockData> {
@@ -194,8 +192,7 @@ impl StockInformation {
         }
 
         let mut moving_averages: Vec<Decimal> = vec![];
-        let closing_prices = self
-            .stock_data_series
+        let closing_prices = self.stock_data_series
             .iter()
             .map(|stock_data| stock_data.close)
             .collect::<Vec<Decimal>>();
@@ -244,7 +241,7 @@ impl StockInformation {
         ma_days: Vec<u16>,
         directory: Option<String>,
         height: Option<u32>,
-        width: Option<u32>,
+        width: Option<u32>
     ) -> Result<bool, Box<dyn Error>> {
         let stock_data_series = &self.stock_data_series;
         if stock_data_series.len() == 0 {
@@ -263,34 +260,35 @@ impl StockInformation {
         fs::create_dir_all(&dir)?;
 
         let filepath = format!("{}/{}_candlestick_chart_ohlcv.png", &dir, timestamp);
-        let drawing_area =
-            BitMapBackend::new(&filepath, (height.unwrap_or(1024), width.unwrap_or(768)))
-                .into_drawing_area();
+        let drawing_area = BitMapBackend::new(&filepath, (
+            height.unwrap_or(1024),
+            width.unwrap_or(768),
+        )).into_drawing_area();
 
         drawing_area.fill(&WHITE)?;
 
-        let candlesticks = stock_data_series.iter().map(|stock_data| {
-            CandleStick::new(
-                stock_data.date.date_naive(),
-                stock_data.open.to_f64().unwrap(),
-                stock_data.high.to_f64().unwrap(),
-                stock_data.low.to_f64().unwrap(),
-                stock_data.close.to_f64().unwrap(),
-                GREEN.filled(),
-                RED.filled(),
-                25,
-            )
-        });
+        let candlesticks = stock_data_series
+            .iter()
+            .map(|stock_data| {
+                CandleStick::new(
+                    stock_data.date.date_naive(),
+                    stock_data.open.to_f64().unwrap(),
+                    stock_data.high.to_f64().unwrap(),
+                    stock_data.low.to_f64().unwrap(),
+                    stock_data.close.to_f64().unwrap(),
+                    GREEN.filled(),
+                    RED.filled(),
+                    25
+                )
+            });
 
         let stock_data_series_last_day_idx = stock_data_series.len() - 1;
 
         let (from_date, to_date) = (
             stock_data_series[0].date.date_naive() - Duration::days(1),
-            stock_data_series[stock_data_series_last_day_idx]
-                .date
-                .date_naive()
+            stock_data_series[stock_data_series_last_day_idx].date.date_naive() +
                 //.time()
-                + Duration::days(1),
+                Duration::days(1),
         );
 
         let mut chart_builder = ChartBuilder::on(&drawing_area);
@@ -331,8 +329,12 @@ impl StockInformation {
                     let moving_averages = self.get_moving_averages(ma_day.clone());
 
                     match moving_averages {
-                        Some(moving_averages) => return (ma_day, moving_averages),
-                        None => return (ma_day, Vec::with_capacity(0)),
+                        Some(moving_averages) => {
+                            return (ma_day, moving_averages);
+                        }
+                        None => {
+                            return (ma_day, Vec::with_capacity(0));
+                        }
                     }
                 })
                 .collect();
@@ -359,7 +361,14 @@ impl StockInformation {
                     let line_series_label = format!("SMA {}", &ma_day);
 
                     let legend = |color: RGBColor| {
-                        move |(x, y)| PathElement::new([(x, y), (x + 20, y)], color)
+                        move |(x, y)|
+                            PathElement::new(
+                                [
+                                    (x, y),
+                                    (x + 20, y),
+                                ],
+                                color
+                            )
                     };
 
                     let sma_line = LineSeries::new(ma_line_data, chosen_color.stroke_width(2));
@@ -382,10 +391,9 @@ impl StockInformation {
             }
         }
 
-        drawing_area.present().expect(&format!(
-            "Cannot write into {:?}. Directory does not exists.",
-            &dir
-        ));
+        drawing_area
+            .present()
+            .expect(&format!("Cannot write into {:?}. Directory does not exists.", &dir));
 
         println!("Result has been saved to {}", filepath);
 
@@ -398,16 +406,14 @@ fn it_creates_a_new_stock_information_with_data_series_and_show_chart_with_movin
     let stock_information = StockInformation::new(
         "BenCorpo".to_string(),
         "BNCRP".to_string(),
-        stock_data_series,
+        stock_data_series
     );
 
     let ma_days = vec![7, 2, 0];
     let chart = stock_information.show_chart(ma_days, None, None, None);
 
     match chart {
-        Ok(_) => {
-            assert!(true)
-        }
+        Ok(_) => { assert!(true) }
         Err(err) => println!("Error in saving chart {:?}", err),
     }
 }

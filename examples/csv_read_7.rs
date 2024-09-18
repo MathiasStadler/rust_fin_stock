@@ -5,10 +5,8 @@
 
 use csv::Error;
 use chrono::{ DateTime, /*NaiveDate,*/ NaiveDateTime, TimeZone, Utc };
-// use rust_decimal::prelude::FromPrimitive;
-// use rust_decimal::prelude::ToPrimitive;
 use rust_decimal::Decimal;
-// use rust_decimal_macros::dec;
+
 
 // Date,Open,High,Low,Close,Volume
 use serde::Deserialize;
