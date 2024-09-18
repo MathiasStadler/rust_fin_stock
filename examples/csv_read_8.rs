@@ -89,14 +89,25 @@ fn main() {
 
     println!("Len => {}", &stock_data.as_mut().unwrap().len());
 
-    vec_loop_3(stock_data.expect("REASON"));
+    vec_loop_3(stock_data.clone().expect("REASON"));
+
+    copy_last_to_new_vec(stock_data.expect("REASON"));
 }
 
 fn vec_loop_3(mut v: Vec<StockData>) {
     for i in v.iter_mut() {
-        println!("{:?}", i);
-        println!("<>");
+        // println!("{:?}", i);
+        // println!("<>");
     }
+}
+
+fn copy_last_to_new_vec( v:Vec<StockData>){
+
+    let stock_data = v.get(v.len() -1);
+
+println!("stock_data {:?}",stock_data);
+    
+
 }
 
 fn read_csv() -> Result<Vec<StockData>> {
