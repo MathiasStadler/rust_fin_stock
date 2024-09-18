@@ -353,6 +353,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ce81f49ae8a0482e4c55ea62ebbd7e5a686af544c00b9d090bba3ff9be97b3d"
 
 [[package]]
+name = "fmt"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09904adae26440d46daeacb5ed7922fee69d43ebf84d31e078cd49652cecd718"
+
+[[package]]
 name = "font-kit"
 version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -883,6 +889,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "csv",
+ "fmt",
  "plotters",
  "rand",
  "rust_decimal",

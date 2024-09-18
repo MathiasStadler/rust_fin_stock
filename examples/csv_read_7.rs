@@ -3,13 +3,25 @@
 
 // sample for explain read from file system
 
-use csv::Error;
+#[allow(unused_imports)]
+use std::result;
+#[allow(unused_imports)]
+use std::fmt::Debug;
+#[allow(unused_imports)]
+use std::fmt::Formatter;
+#[allow(unused_imports)]
+use csv::{ Result, Error };
 use chrono::{ DateTime, /*NaiveDate,*/ NaiveDateTime, TimeZone, Utc };
-use rust_decimal::Decimal;
+#[allow(unused_imports)]
+use rust_decimal::{ Decimal };
+use serde::Deserialize;
+
 
 
 // Date,Open,High,Low,Close,Volume
-use serde::Deserialize;
+
+
+#[derive(Debug)]
 #[derive(Deserialize)]
 struct Record {
     #[serde(rename = "Date")]
@@ -28,6 +40,7 @@ struct Record {
 }
 
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct StockData {
     #[allow(dead_code)]
     date: DateTime<Utc>,
@@ -66,9 +79,6 @@ impl StockData {
 }
 
 fn generate_utc_date_from_date_string(date_string: &str) -> DateTime<Utc> {
-    // poor debug
-    //  println!("date-string => {}",  date_string);
-
     let date_time_string = format!("{} 00:00:00", date_string);
     let day_one = NaiveDateTime::parse_from_str(&date_time_string, "%Y-%m-%d %H:%M:%S").unwrap();
 
@@ -78,21 +88,21 @@ fn generate_utc_date_from_date_string(date_string: &str) -> DateTime<Utc> {
 fn main() {
     println!("Start");
 
-    let stock_data = read_csv();
+    let mut stock_data = read_csv();
 
-    // println!("Len => {}",stock_data.unwrap().len());
+    println!("Len => {}", &stock_data.as_mut().unwrap().len());
 
-    vec_loop_3(stock_data);
+    vec_loop_3(stock_data.expect("REASON"));
 }
 
-fn vec_loop_3(mut v: Result<Vec<StockData>, Error>) {
+fn vec_loop_3(mut v: Vec<StockData>) {
     for i in v.iter_mut() {
         println!("{:?}", i);
         println!("<>");
     }
 }
 
-fn read_csv() -> Result<Vec<StockData>, csv::Error> {
+fn read_csv() -> Result<Vec<StockData>> {
     // let mut reader = csv::Reader::from_reader(csv.as_bytes());
     let mut reader = csv::Reader::from_path("stock_data/stock_trex_data.csv").unwrap();
 
