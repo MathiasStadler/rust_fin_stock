@@ -2,7 +2,7 @@
 // generate_stock_data_series_ohlcv
 
 // running into folder => /home/user/workspace_rust/rust_fin_stock
-// cargo run --example creates_stock_report_1
+// cargo run --example create_stock_report_1
 
 use std::error::Error;
 use std::fs;

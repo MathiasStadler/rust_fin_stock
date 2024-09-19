@@ -120,7 +120,7 @@ fn generate_stock_data_series(stock_data: &str) -> Result<Vec<StockData>, csv::E
 
     for record in reader.deserialize() {
         let record: Record = record?;
-        
+
         let date = generate_utc_date_from_date_string(&record.date);
 
         //ohlcv
@@ -130,7 +130,6 @@ fn generate_stock_data_series(stock_data: &str) -> Result<Vec<StockData>, csv::E
         let close = Decimal::from_f32_retain(record.close).unwrap().round_dp(2);
         //#TODO volumes missing
 
-        
         let stk_line = StockData::new(date, high, low, open, close);
 
         stock_data.push(stk_line);
@@ -138,8 +137,6 @@ fn generate_stock_data_series(stock_data: &str) -> Result<Vec<StockData>, csv::E
 
     Ok(stock_data)
 }
-
-
 
 #[derive(Debug)]
 pub struct StockInformation {
@@ -224,14 +221,15 @@ impl StockInformation {
             Err("Exceeded the limit of moving averages to plot")?;
         }
 
-        let dt = Utc::now();
-        let timestamp: i64 = dt.timestamp();
+        // let dt = Utc::now();
+        // let timestamp: i64 = dt.timestamp();
 
         let dir = directory.unwrap_or("chart_outputs".to_string());
 
         fs::create_dir_all(&dir)?;
 
-        let filepath = format!("{}/{}_candlestick_chart_ohlcv.png", &dir, timestamp);
+        // let filepath = format!("{}/{}_candlestick_chart_ohlcv.png", &dir, timestamp);
+        let filepath = format!("{}/candlestick_chart_ohlcv.png", &dir);
         let drawing_area = BitMapBackend::new(&filepath, (
             height.unwrap_or(1024),
             width.unwrap_or(768),
@@ -250,7 +248,7 @@ impl StockInformation {
                     stock_data.close.to_f64().unwrap(),
                     GREEN.filled(),
                     RED.filled(),
-                    25
+                    10
                 )
             });
 
@@ -377,8 +375,8 @@ fn it_creates_a_new_stock_information_with_data_series_and_show_chart_with_movin
     // let stock_data_series = generate_stock_data_series(Some(14));
     let stock_data_series = generate_stock_data_series(stock_data);
     let stock_information = StockInformation::new(
-        "BenCorpo".to_string(),
-        "BNCRP".to_string(),
+        "Trex".to_string(),
+        "TREX".to_string(),
         stock_data_series.expect("REASON")
     );
 
